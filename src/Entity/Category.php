@@ -38,6 +38,11 @@ class Category
         $this->posts = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->name;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,12 +65,14 @@ class Category
         return $this->slug;
     }
 
+    /*
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
 
         return $this;
     }
+    */
 
     public function getParent(): ?self
     {
