@@ -8,7 +8,9 @@ use App\Repository\CategoryRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/admin/category', name: 'admin_category_')]
@@ -64,10 +66,19 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'delete')]
-    public function deleteCategory(Category $category, Request $request, ManagerRegistry $doctrine): Response
+    public function delete(Category $category, ManagerRegistry $doctrine, Request $request, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
+        $token = new CsrfToken('delete', $request->query->get('_csrf_token'));
+        //dd($token);
+        if ($csrfTokenManager->isTokenValid($token)) {
+            $em = $doctrine->getManager();
+            $em->remove($category);
+            $em->flush();
+            $this->addFlash('success', 'Catégorie supprimée !');
+        } else {
+            $this->addFlash('danger', 'Token absent ou invalide !');
+        }
         return $this->redirectToRoute('admin_category_index');
     }
-
 
 }

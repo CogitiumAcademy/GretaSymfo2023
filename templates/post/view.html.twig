@@ -28,9 +28,35 @@
                         <p>
                             {{ post.content | raw }}
                         </p>
+
+                        <div>
+                            <h2>Les commentaires</h2>
+                            <ul>
+                                {% for comment in post.comments %}
+                                <li>
+                                    {{ comment.content }}<br>
+                                    Ecrit par {{ comment.user.displayName }}
+                                    {{ comment.updatedAt | ago }}<br>
+                                    {% if comment.user == app.user %}
+                                        <a href="">Modifier</a> - <a href="{{ path('comment_delete', {id: comment.id}) }}">Supprimer</a>
+                                    {% endif %}
+                                </li>
+                                {% endfor %}    
+                            </ul>
+
+                        </div>
+
+                        {% if is_granted("ROLE_USER") %}
+                        <div>
+                            {{ form(form) }}
+                        </div>
+                        {% else %}
+                            <div>Connectez-vous pour laisser un commentaire !</div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </article>
+
 
 {% endblock %}
