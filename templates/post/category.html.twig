@@ -10,8 +10,8 @@
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <div class="site-heading">
-                            <h1>Clean Blog</h1>
-                            <span class="subheading">A Blog Theme by Start Bootstrap</span>
+                            <h1>Catégorie : {{ category.name }}</h1>
+                            <span class="subheading"></span>
                         </div>
                     </div>
                 </div>
@@ -25,20 +25,18 @@
                 <!-- Liste principale des derniers articles -->
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     
-                    {% for post in posts %}
+                    {% for post in category.posts %}
 
                         <!-- Post preview-->
                         <div class="post-preview">
                             <a href="{{ path('post_view', {slug: post.slug}) }}">
                                 <h2 class="post-title">{{ post.title }}</h2>
-                                <img src="{{ vich_uploader_asset(post) }}" alt="{{ post.title }}" width="250">
                                 <h3 class="post-subtitle">{{ post.content | slice(0, 150) | raw }}...</h3>
                             </a>
                             <p class="post-meta">
                                 Rédigé par
                                 <a href="#!">{{ post.user.displayName }}</a>
                                 il y a {{ post.createdAt | ago }}
-                                - Classé dans {{ post.category.name }}
                             </p>
                         </div>
                         
@@ -49,34 +47,6 @@
 
                     <!-- Pager-->
                     <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>
-                </div>
-
-                <!-- Sidebar avec les anciens articles -->
-                <div class="col-lg-4 col-md-4 mx-auto">
-                    
-                    <!-- Widget Anciens articles -->
-                    <h2>Les anciens articles</h2>
-                    {% for oldPost in oldPosts %}
-                        <div class="post-preview">
-                            <a href="{{ path('post_view', {slug: oldPost.slug}) }}">
-                                <h2 class="post-subtitle">{{ oldPost.title }}</h2>
-                            </a>
-                            <p class="post-meta">{{ oldPost.createdAt | ago }}</p>
-                        </div>
-                    {% endfor %}
-
-                    <!-- Widget filtre catégories -->
-                    <h2>Les catégories</h2>
-                    <div class="post-preview">
-                        {% for category in categories %}
-                            {% if category.posts| length > 0 %}
-                                <a href="{{ path('post_category', {slug: category.slug}) }}">
-                                    <h2 class="post-subtitle">{{ category.name }} ({{ category.posts| length }})</h2>
-                                </a>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-
                 </div>
 
             </div>

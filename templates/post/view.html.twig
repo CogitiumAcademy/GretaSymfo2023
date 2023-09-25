@@ -38,7 +38,8 @@
                                     Ecrit par {{ comment.user.displayName }}
                                     {{ comment.updatedAt | ago }}<br>
                                     {% if comment.user == app.user %}
-                                        <a href="">Modifier</a> - <a href="{{ path('comment_delete', {id: comment.id}) }}">Supprimer</a>
+                                        <a href="{{ path('comment_edit', {id: comment.id}) }}"><i class="fa-solid fa-pen"></i></a> 
+                                        <a href="{{ path('comment_delete', {id: comment.id, _csrf_token: csrf_token('delete')}) }}"><i class="fa-regular fa-trash-can" onclick="return confirm('Etes-vous certain ?')"></i></a>
                                     {% endif %}
                                 </li>
                                 {% endfor %}    

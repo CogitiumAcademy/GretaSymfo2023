@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Entity\Comment;
+use App\Entity\Category;
 use App\Form\CommentType;
 use App\Repository\PostRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class PostController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function index(PostRepository $postRepository): Response
+    public function index(PostRepository $postRepository, CategoryRepository $categoryRepository): Response
     {
         //$posts = $postRepository->findAll();
         $posts = $postRepository->findLastPosts();
@@ -25,9 +27,22 @@ class PostController extends AbstractController
         
         $oldPosts = $postRepository->findOldPosts();
 
+        $categories = $categoryRepository->findAll();
+
         return $this->render('post/index.html.twig', [
             'posts' => $posts,
-            'oldPosts' => $oldPosts
+            'oldPosts' => $oldPosts,
+            'categories' => $categories
+        ]);
+    }
+
+    #[Route('/category/{slug}', name: 'post_category')]
+    public function post_category(Category $category): Response
+    {
+        //dd($category->getPosts());
+        return $this->render('post/category.html.twig', [
+            //'posts' => $category->getPosts(),
+            'category' => $category
         ]);
     }
 
