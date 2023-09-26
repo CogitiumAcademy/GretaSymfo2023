@@ -10,6 +10,7 @@ use App\Form\CommentType;
 use App\Repository\PostRepository;
 use App\Repository\CategoryRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,6 +31,47 @@ class PostController extends AbstractController
         $categories = $categoryRepository->findAll();
 
         return $this->render('post/index.html.twig', [
+            'posts' => $posts,
+            'oldPosts' => $oldPosts,
+            'categories' => $categories
+        ]);
+    }
+
+    #[Route('/index2', name: 'home2')]
+    public function index2(
+        PostRepository $postRepository, 
+        CategoryRepository $categoryRepository,
+        PaginatorInterface $paginatorInterface,
+        Request $request
+    ): Response
+    {
+        //$data = $postRepository->findAll();
+
+        //dump($data);
+
+        /*
+        $posts = $paginatorInterface->paginate(
+            $data,
+            $request->query->getInt('page', 1),
+            3
+        );
+        */
+
+        //dd($posts);
+
+        $posts = $paginatorInterface->paginate(
+            $postRepository->findLastPostsPaginated(),
+            $request->query->getInt('page', 1),
+            3
+        );
+
+        //dd($posts);
+        
+        $oldPosts = $postRepository->findOldPosts();
+
+        $categories = $categoryRepository->findAll();
+
+        return $this->render('post/index2.html.twig', [
             'posts' => $posts,
             'oldPosts' => $oldPosts,
             'categories' => $categories

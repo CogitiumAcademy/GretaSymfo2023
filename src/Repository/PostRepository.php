@@ -49,6 +49,18 @@ class PostRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findLastPostsPaginated()
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.active = :active')
+            ->setParameter('active', true)
+            ->orderBy('p.createdAt', 'DESC')
+            //->setMaxResults($nb)
+            ->getQuery()
+            //->getResult()
+        ;
+    }
+
     public function nbAllSubjects(): array
     {
         $conn = $this->getEntityManager()->getConnection();
